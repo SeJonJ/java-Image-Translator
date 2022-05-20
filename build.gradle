@@ -1,0 +1,47 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.1'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+group = 'HJproject'
+version = '0.1.0-SNAPSHOT'
+// JDK 버전 설정
+sourceCompatibility = '8'
+
+repositories {
+	mavenCentral()
+	maven { url 'https://jitpack.io' }
+
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// lombok 추가
+	implementation 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+	//	JSON
+	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.3'
+
+	// jsp
+	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+	implementation 'javax.servlet:jstl'
+
+	// Data 다루기
+	implementation 'com.github.shin285:KOMORAN:3.3.4'
+
+
+
+//	testImplementation('org.springframwork.boot:spring-boot-starter-test'){
+//		exclude group : 'org.junit.vintage', module: 'junit-vintage-engine'
+//	}
+}
+
+test {
+	useJUnitPlatform()
+}

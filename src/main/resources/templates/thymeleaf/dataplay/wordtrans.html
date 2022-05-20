@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>wordtranslator</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- tesseract.js CDN -->
+    <script src='https://unpkg.com/tesseract.js@2.1.4/dist/tesseract.min.js'></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/2.1.5/tesseract.min.js" integrity="sha512-QMGuBW4cKAKmxjxukfPlQqFL8Tc2yYWTBhg9o8fKx06BGZrNXMmafjtnmXthGasytcaIILHRrg5N5Hw0yOuSjw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+    <script type="module">
+
+    </script>
+    <script>
+
+        var txt;
+
+        const recognize = async ({ target: { files }  }) =>
+        {
+            const
+                { data:
+                    { text }
+                } = await Tesseract.recognize(
+                    files[0],
+                    $("#langsel").val(),
+                    {
+                corePath: 'https://unpkg.com/tesseract.js-core@v2.0.0/tesseract-core.wasm.js',
+                //logger: m => console.log(m),
+            });
+            //console.log(text);
+            $("#txt").val(text);
+            txt = text;
+
+        }
+
+        $(function (){
+            const $img = $("#upload")
+            // 이미지가 바뀔 때마다 recognize 함수가 실행됨 -> 사진에서 텍스트 가져오기
+            $img.on("change", recognize);
+
+            // 번역하기 버튼을 누르면 ajax 로 pagago 번역 실행
+            $("#translator").on("click", function(){
+
+                var source = $("#langsel").val();
+                var target = $("#toTrans").val();
+
+                var data = {
+                    "text": txt,
+                    "source": source,
+                    "target": target
+                }
+
+                //console.log(data);
+
+                $.ajax({
+                    url : "/transword",
+                    type : "GET",
+                    data : data,
+                    dataType : "text",
+                    //contentType : "application/json;charset=utf-8",
+                    success : function(result){
+                        // console.log(result)
+                        $("#transText").val(result);
+
+                    }
+                })
+            })
+        })
+
+    </script>
+    <style>
+        #txt {
+            border: 1px solid black;
+            resize: none;
+        }
+
+        #transText {
+            border: 1px solid black;
+            resize: none;
+            margin-left: 100px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>번역 시작</h1>
+    <div>
+        1. 추출할 언어 선택<br>
+        <select id="langsel">
+            <option value='eng' selected> English </option>
+            <option value="kor" selected> Korean </option>
+        </select>
+    </div>
+    <br>
+    <div>
+        <div>
+            <span>2. 글자를 인식할 파일선택</span><br>
+            <input type="file" id="upload" name="upload">
+        </div>
+    </div>
+    <br>
+    <div>
+        <span>3. 번역할 언어 선택</span>
+        <select id="toTrans">
+            <option value='eng' selected> English </option>
+            <option value="kor" selected> Korean </option>
+        </select>
+        <br>
+        <textarea name="text" id="txt" cols="100" rows="30" ></textarea>
+        <textarea name="text" id="transText" cols="100" rows="30" ></textarea>
+        <br>
+
+
+        <input type="button" id="translator" name="transText" value="번역하기">
+   </div>
+</body>
+</html>
