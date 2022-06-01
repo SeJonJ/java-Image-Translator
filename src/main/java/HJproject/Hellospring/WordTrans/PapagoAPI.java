@@ -1,6 +1,5 @@
 package HJproject.Hellospring.WordTrans;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -10,16 +9,15 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class PapagoAPI {
 
+
     public String translator(String word, String source, String target) {
-        String clientId = APIdata.naverPaPagoSearchID; //애플리케이션 클라이언트 아이디값";
-        String clientSecret = APIdata.naverPaPagoSecret; //애플리케이션 클라이언트 시크릿값";
+        String clientId = APIdata.naverPaPagoSearchID; // "애플리케이션 클라이언트 아이디값";
+        String clientSecret = APIdata.naverPaPagoSecret; // "애플리케이션 클라이언트 시크릿값";
 
         String apiURL = "https://openapi.naver.com/v1/papago/n2mt"; // 검색 url
         String text;
@@ -33,7 +31,10 @@ public class PapagoAPI {
         requestHeaders.put("X-Naver-Client-Id", clientId);
         requestHeaders.put("X-Naver-Client-Secret", clientSecret);
 
-        String responseBody = post(apiURL, requestHeaders, text, source, target);
+        // getSourceAndTarget 메소드를 이용해 API에서 사용가능한 source 언어를 가져온다
+        String sourceLang = setSource(source);
+
+        String responseBody = post(apiURL, requestHeaders, text, sourceLang, target);
 
 
         return parsingTrans(responseBody);
@@ -50,10 +51,12 @@ public class PapagoAPI {
 
             // response 파싱한 결과에서 message 에 대한 값을 가져와서 obj 에 저장
             JSONObject obj = (JSONObject) parsing.get("message");
-            System.out.println("obj : "+obj.toString());
+            //System.out.println("obj : "+obj.toString());
+
             // obj 에서 다시 result 에 대한 값을 가져와서 저장
             JSONObject result = (JSONObject)obj.get("result");
-            System.out.println("result : "+result.toString());
+           //System.out.println("result : "+result.toString());
+
             // result 에서 translatedText 를 가져와서 text 로 저장한 후 return
             transText = result.get("translatedText").toString();
             //System.out.println(text);
@@ -65,9 +68,12 @@ public class PapagoAPI {
         return transText;
     }
 
-    private static String post(String apiUrl, Map<String, String> requestHeaders, String text, String source, String target){
+    private String post(String apiUrl, Map<String, String> requestHeaders, String text, String source, String target){
+
         HttpURLConnection con = connect(apiUrl);
-        String postParams = "source=en&target=ko&text=" + text; // source=원본언어&target=번역언어
+
+        String postParams = "source="+source+"&target="+target+"&text=" + text; // source=원본언어&target=번역언어
+
         try {
             con.setRequestMethod("POST");
             for(Map.Entry<String, String> header :requestHeaders.entrySet()) {
@@ -93,7 +99,7 @@ public class PapagoAPI {
         }
     }
 
-    private static HttpURLConnection connect(String apiUrl){
+    private HttpURLConnection connect(String apiUrl){
         try {
             URL url = new URL(apiUrl);
             return (HttpURLConnection)url.openConnection();
@@ -104,7 +110,7 @@ public class PapagoAPI {
         }
     }
 
-    private static String readBody(InputStream body){
+    private String readBody(InputStream body){
         InputStreamReader streamReader = new InputStreamReader(body);
 
         try (BufferedReader lineReader = new BufferedReader(streamReader)) {
@@ -122,38 +128,20 @@ public class PapagoAPI {
         }
     }
 
-//    public static void main(String[] args) {
-//        String word = "My drawing was not a picture of  hat. It was a\n" +
-//                "picture of a boa constrictor digesting an elephant,\n" +
-//                "Then | drew the inside of the boa constrictor, so\n" +
-//                "the grownups could understand.\n" +
-//                "\n" +
-//                "They always need explanations. My drawing\n" +
-//                "Number Two looked like this.\n";
-//
-//        String api  = new PapagoAPI().translator(word, "eng", "kor");
-//        System.out.println(api);
-        // {"message":{"result":{"tarLangType":"ko","translatedText":"내가 그린 그림은 모자 그림이 아니었다. 그것은였다.\n보아뱀이 코끼리를 소화시키는 사진\n그리고 나서 |는 보아 구속자의 내부를 그렸습니다, 그래서\n어른들은 이해할 수 있었다.\n\n그들은 항상 설명이 필요하다. 내 그림\n2번은 이랬어요.","tarDict":null,"srcLangType":"en","engineType":"UNDEF_MULTI_SENTENCE","pivot":null,"dict":null},"@type":"response","@version":"1.0.0","@service":"naverservice.nmt.proxy"}}
+    private String setSource(String lang){
+        switch (lang) {
+            case "kor":
+                return "ko";
 
-//        String response = new PapagoAPI().translator(word, "eng", "kor");
-//
-//        // JSON 파싱하는 객체
-//        JSONParser parser = new JSONParser();
-//        try {
-//            // response 파싱
-//            JSONObject parsing = (JSONObject)parser.parse(response);
-//
-//            // response 파싱한 결과에서 message 에 대한 값을 가져와서 obj 에 저장
-//            JSONObject obj = (JSONObject) parsing.get("message");
-//            // obj 에서 다시 result 에 대한 값을 가져와서 저장
-//            JSONObject result = (JSONObject)obj.get("result");
-//            // result 에서 translatedText 를 가져와서 text 로 저장한 후 return
-//            String text = result.get("translatedText").toString();
-//            System.out.println(text);
+            case "eng":
+                return "en";
 
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
+            case "jpn":
+                return "ja";
+        }
 
-//    }
+        return null;
+    }
+
+
 }

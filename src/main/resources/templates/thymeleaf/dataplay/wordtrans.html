@@ -17,26 +17,54 @@
 
         var txt;
 
+        //  translatorArea
+        var $translatorArea = $("#translatorArea");
+
+        // 로딩 이미지, 텍스트 영역
+       // const $extractOn = $("#extractOn");
+        //const $Loading = $("#Loading");
+
+
+
         const recognize = async ({ target: { files }  }) =>
         {
+            // 추출할 언어 선택
+            const $langsel = $("#langsel").val();
+
+            await $("#extractOn").hide();
+            await $("#Loading").show();
+
             const
                 { data:
                     { text }
                 } = await Tesseract.recognize(
                     files[0],
-                    $("#langsel").val(),
+                    $langsel,
                     {
                 corePath: 'https://unpkg.com/tesseract.js-core@v2.0.0/tesseract-core.wasm.js',
-                //logger: m => console.log(m),
+                logger: m => console.log(m),
             });
             //console.log(text);
-            $("#txt").val(text);
+
+            // 텍스트 추출이 끝나면 로딩 이미지 감추기
+            $("#Loading").hide();
+
+            // 텍스트 추출이 끝나면 텍스트 영역 보이도록 만들기
+            $("#extractOn").show();
+
+            // 추출된 내용을 extractTxt 에 넣어둠
+            $("#extractTxt").val(text);
             txt = text;
 
         }
 
         $(function (){
+            // 처음에는 텍스트 창 안보이게 && 로딩창도 안보이게
+            $("#extractOn").hide();
+            $("#Loading").hide();
+
             const $img = $("#upload")
+
             // 이미지가 바뀔 때마다 recognize 함수가 실행됨 -> 사진에서 텍스트 가져오기
             $img.on("change", recognize);
 
@@ -89,31 +117,38 @@
     <div>
         1. 추출할 언어 선택<br>
         <select id="langsel">
-            <option value='eng' selected> English </option>
+            <option value="eng" selected> English </option>
             <option value="kor" selected> Korean </option>
+            <option value="jpn" selected> Japanese </option>
+
         </select>
     </div>
     <br>
     <div>
-        <div>
+        <div id="imgSelArea">
             <span>2. 글자를 인식할 파일선택</span><br>
             <input type="file" id="upload" name="upload">
         </div>
     </div>
     <br>
-    <div>
-        <span>3. 번역할 언어 선택</span>
-        <select id="toTrans">
-            <option value='eng' selected> English </option>
-            <option value="kor" selected> Korean </option>
-        </select>
-        <br>
-        <textarea name="text" id="txt" cols="100" rows="30" ></textarea>
-        <textarea name="text" id="transText" cols="100" rows="30" ></textarea>
-        <br>
+    <div id = translatorArea>
 
+        <img src="/transLoading/loading.gif" id="Loading" alt="Loading">
 
-        <input type="button" id="translator" name="transText" value="번역하기">
+        <div id="extractOn">
+            <span>3. 번역할 언어 선택</span>
+            <select id="toTrans">
+                <option value='en' selected> English </option>
+                <option value="ko" selected> Korean </option>
+                <option value="ja" selected> Japanese </option>
+            </select>
+            <br>
+            <textarea name="text" id="extractTxt" cols="100" rows="30" ></textarea>
+            <textarea name="text" id="transText" cols="100" rows="30" ></textarea>
+            <br>
+
+            <input type="button" id="translator" name="translator" value="번역하기">
+        </div>
    </div>
 </body>
 </html>

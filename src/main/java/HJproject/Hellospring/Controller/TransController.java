@@ -37,7 +37,7 @@ public class TransController {
         PrintWriter out = res.getWriter();
         out.println(trans);
 
-        System.out.println(trans);
+        //System.out.println(trans);
 
     }
 }

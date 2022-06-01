@@ -1,4 +1,4 @@
-# DataPlay Project : 데이터 갖고 놀기
+# DataPlay Project : 데이터 갖고 놀기 2탄
 Tesseract와 파파고 API 를 이용해서 이미지 번역하기
 
 Image Translator Using Java & Tesseract OCR
@@ -23,13 +23,15 @@ Image Translator Using Java & Tesseract OCR
 
 # **3. 구현된 기능**
 - 이미지 인식 후 프론트에 인식된 텍스트 출력하기 => 인식률은 약 85% 정도 되는듯, 한국어는 더 낮다
-- 인식된 텍스트만 서버로 보내고, 서버에서는 텍스트를 번역 후 다시 클라이언트 웹에게 보내준다.
+- 이미지를 추출하는 동안 로딩 gif 를 보여주고 추출이 완료된 후에는 추출한 텍스트를 텍스트 영역에 출력한다.
+- '번역하기' 버튼을 누르면 추출된 텍스트를 서버로 보내고, 서버에서는 해당 텍스트를 번역 후 다시 클라이언트 웹에게 보내준다 => 번역에 파파고 API 사용
 - 웹 에서는 번역된 내용을 오른쪽 textarea 에 출력한다.
+- 인식 언어는 한국어, 영어, 일본어 -> 번역 언어 : 한국어, 영어, 일본어 => 각각 3개
+
 
 <hr>
 
 # **4. 추가 목표 & 아쉬운 점**
-- 인식 언어는 한국어, 영어, 일본어 -> 번역 언어 : 한국어, 영어, 일본어 => 각각 3개가 되도록 추가
 - Tesseract 코드 이해하고 주석 달아보기
 - CSS 꾸미기
 - 최종적으로 Word Cloud 프로젝트 && spring 프로젝트 와 합치기
@@ -37,8 +39,9 @@ Image Translator Using Java & Tesseract OCR
 <hr>
 
 # **5. 만들어본 예제**
-
+![](example/example.png)
 
 # 활용한 API 목록
-Tesseract OCR : https://github.com/tesseract-ocr/tesseract
-Naver PapagoAPI : https://developers.naver.com/docs/papago/README.md
+- Tesseract OCR : https://github.com/naptha/tesseract.js?files=1
+
+- Naver PapagoAPI : https://developers.naver.com/docs/papago/README.md
