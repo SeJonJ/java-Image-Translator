@@ -32,15 +32,19 @@ public class PapagoAPI {
         requestHeaders.put("X-Naver-Client-Secret", clientSecret);
 
         // getSourceAndTarget 메소드를 이용해 API에서 사용가능한 source 언어를 가져온다
+        // 정확히는
         String sourceLang = setSource(source);
 
+        // 번역에 사용되는 post 메소드에 apiURL, requestHeader, 프론트 view 에서 넘어온 text 와 해당 text 의 언어
+        // 번역할 target 언어를 매개변수로 담아준다
         String responseBody = post(apiURL, requestHeaders, text, sourceLang, target);
 
 
         return parsingTrans(responseBody);
-//        return responseBody;
+
     }
 
+    // parsingTrans 메소드는 JSON 으로 return 되는 번역 내용을 파싱하기 위한 메소드이다.
     private String parsingTrans(String responseBody){
         // JSON 파싱하는 객체
         JSONParser parser = new JSONParser();

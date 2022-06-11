@@ -33,7 +33,7 @@ Image Translator Using Java & Tesseract OCR
 
 # **4. 추가 목표 & 아쉬운 점**
 - Tesseract 코드 이해하고 주석 달아보기
-- CSS 꾸미기
+- CSS 꾸미기 => css 는 나중에 spring 프로젝트와 합치면서 꾸밀 예정
 - 최종적으로 Word Cloud 프로젝트 && spring 프로젝트 와 합치기
 
 <hr>
