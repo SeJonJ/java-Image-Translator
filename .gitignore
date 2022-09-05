@@ -214,5 +214,4 @@ $RECYCLE.BIN/
 #
 #### VS Code ###
 #.vscode/
-/src/main/java/HJproject/Hellospring/Practice/
 /src/main/java/HJproject/Hellospring/WordTrans/APIdata.java

@@ -7,8 +7,16 @@
     <!-- tesseract.js CDN -->
     <script src='https://unpkg.com/tesseract.js@2.1.4/dist/tesseract.min.js'></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/2.1.5/tesseract.min.js" integrity="sha512-QMGuBW4cKAKmxjxukfPlQqFL8Tc2yYWTBhg9o8fKx06BGZrNXMmafjtnmXthGasytcaIILHRrg5N5Hw0yOuSjw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/2.1.5/tesseract.min.js"
+            integrity="sha512-QMGuBW4cKAKmxjxukfPlQqFL8Tc2yYWTBhg9o8fKx06BGZrNXMmafjtnmXthGasytcaIILHRrg5N5Hw0yOuSjw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+            crossorigin="anonymous"></script>
     <script type="module">
 
     </script>
@@ -20,13 +28,12 @@
         var $translatorArea = $("#translatorArea");
 
         // 로딩 이미지, 텍스트 영역
-       // const $extractOn = $("#extractOn");
+        // const $extractOn = $("#extractOn");
         //const $Loading = $("#Loading");
 
 
         // 여기는 너무 어려움ㅠ
-        const recognize = async ({ target: { files }  }) =>
-        {
+        const recognize = async ({target: {files}}) => {
             // 추출할 언어 선택
             const $langsel = $("#langsel").val();
 
@@ -34,15 +41,16 @@
             await $("#Loading").show();
 
             const
-                { data:
-                    { text }
+                {
+                    data:
+                        {text}
                 } = await Tesseract.recognize(
                     files[0],
                     $langsel,
                     {
-                corePath: 'https://unpkg.com/tesseract.js-core@v2.0.0/tesseract-core.wasm.js',
-                //logger: m => console.log(m),
-            });
+                        corePath: 'https://unpkg.com/tesseract.js-core@v2.0.0/tesseract-core.wasm.js',
+                        //logger: m => console.log(m),
+                    });
             //console.log(text);
 
             // 텍스트 추출이 끝나면 로딩 이미지 감추기
@@ -50,6 +58,8 @@
 
             // 텍스트 추출이 끝나면 텍스트 영역 보이도록 만들기
             $("#extractOn").show();
+            $("#textarea").show();
+            $("#translator").show();
 
             // 추출된 내용을 extractTxt 에 넣어둠
             $("#extractTxt").val(text);
@@ -58,10 +68,12 @@
         }
 
         // 페이지 로딩 시 실행되는 함수
-        $(function (){
+        $(function () {
             // 처음에는 텍스트 창 안보이게 && 로딩창도 안보이게
             $("#extractOn").hide();
             $("#Loading").hide();
+            $("#textarea").hide();
+            $("#translator").hide();
 
             const $img = $("#upload")
 
@@ -69,7 +81,7 @@
             $img.on("change", recognize);
 
             // 번역하기 버튼을 누르면 ajax 로 pagago 번역 실행
-            $("#translator").on("click", function(){
+            $("#translator").on("click", function () {
 
                 var source = $("#langsel").val();
                 var target = $("#toTrans").val();
@@ -83,12 +95,12 @@
                 //console.log(data);
 
                 $.ajax({
-                    url : "/transword",
-                    type : "GET",
-                    data : data,
-                    dataType : "text",
+                    url: "/transword",
+                    type: "GET",
+                    data: data,
+                    dataType: "text",
                     //contentType : "application/json;charset=utf-8",
-                    success : function(result){
+                    success: function (result) {
                         // console.log(result)
                         $("#transText").val(result);
 
@@ -104,51 +116,72 @@
             resize: none;
         }
 
-        #transText {
-            border: 1px solid black;
-            resize: none;
-            margin-left: 100px;
+        /*#transText {*/
+        /*    border: 1px solid black;*/
+        /*    resize: none;*/
+        /*    margin-left: 100px;*/
+        /*}*/
+
+        #upload {
+            width: 400px;
         }
 
     </style>
 </head>
 <body>
-    <h1>번역 시작</h1>
-    <div>
-        1. 추출할 언어 선택<br>
-        <select id="langsel">
-            <option value="eng" selected> English </option>
-            <option value="kor" selected> Korean </option>
-            <option value="jpn" selected> Japanese </option>
+<div class="container">
+    <h1>Image Transfer</h1>
 
+    <div>
+        <label for="langsel" class="form-label">1. 추출할 언어 선택</label>
+        <select class="form-select" id="langsel">
+            <option selected>언어를 선택해주세요</option>
+            <option value="eng"> English</option>
+            <option value="kor"> Korean</option>
+            <option value="jpn"> Japanese</option>
         </select>
     </div>
     <br>
     <div>
         <div id="imgSelArea">
-            <span>2. 글자를 인식할 파일선택</span><br>
-            <input type="file" id="upload" name="upload">
+            <div class="mb-3">
+                <label for="upload" class="form-label">2. 글자를 인식할 파일선택</label>
+                <input class="form-control" type="file" id="upload" name="upload">
+            </div>
         </div>
     </div>
     <br>
-    <div id = translatorArea>
 
         <img src="/transLoading/loading.gif" id="Loading" alt="Loading">
 
         <div id="extractOn">
-            <span>3. 번역할 언어 선택</span>
-            <select id="toTrans">
-                <option value='en' selected> English </option>
-                <option value="ko" selected> Korean </option>
-                <option value="ja" selected> Japanese </option>
+            <label for="toTrans" class="form-label">3. 번역할 언어 선택</label>
+            <select class="form-select" id="toTrans">
+                <option value='en'> English</option>
+                <option value="ko"> Korean</option>
+                <option value="ja"> Japanese</option>
             </select>
-            <br>
-            <textarea name="text" id="extractTxt" cols="100" rows="30" ></textarea>
-            <textarea name="text" id="transText" cols="100" rows="30" ></textarea>
-            <br>
-
-            <input type="button" id="translator" name="translator" value="번역하기">
         </div>
-   </div>
+
+        <br>
+         <input type="button" class="btn btn-info" id="translator" name="translator" value="번역하기">
+        <br>
+
+        <div class="container" id="textarea">
+            <div class="row">
+                <div class="col-4">
+                    <label for="extractTxt" class="form-label">추출된 텍스트</label>
+                    <textarea name="text" id="extractTxt" cols="100" rows="30"></textarea>
+                </div>
+                <div class="col-2"></div>
+                <div class="col-4">
+                    <label for="transText" class="form-label">번역된 텍스트</label>
+                    <textarea name="text" id="transText" cols="100" rows="30"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <br>
+</div>
 </body>
 </html>
