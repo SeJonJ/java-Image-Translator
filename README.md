@@ -3,6 +3,8 @@ Tesseract와 파파고 API 를 이용해서 이미지 번역하기
 
 Image Translator Using Java & Tesseract OCR
 
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FSeJonJ%2Fjava-Image-Translator&count_bg=%233310C8&title_bg=%2316C86B&icon=&icon_color=%23E7E7E7&title=HITS&edge_flat=true)](https://hits.seeyoufarm.com)
+
 # **1. 프로젝트 설명**
 - Tesseract OCR 을 활용하여 이미지의 텍스트를 인식 후 네이버 파파고 API 를 사용해서 해당 텍스트를 번역하여 출력하는 프로젝트!
 - 인식 언어는 영어, 한국어, 일본어 -> 번역 언어 : 영어, 한국어, 일본어
